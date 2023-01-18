@@ -72,6 +72,29 @@ void printExpression(Expr expression) {
   __printExpression(expression, 0);
 }
 
+int evaluateExpression(Expr expression) {
+  if (isTreeEmpty(expression)) {
+    return 0;
+  } else if (isOneElmt(expression)) {
+    return expression->info.number;
+  } else {
+    Operator op = expression->info.operator;
+    int left = evaluateExpression(expression->left);
+    int right = evaluateExpression(expression->right);
+    int value = 0;
+    if (op == ADD) {
+      value = left + right;
+    } else if (op == SUB) {
+      value = left - right;
+    } else if (op == MUL) {
+      value = left * right;
+    } else if (op == DIV) {
+      value = left / right;
+    }
+    return value;
+  }
+}
+
 int main() {
   Expr expr = Expression(
     DIV,
@@ -87,5 +110,6 @@ int main() {
           Number(7)))),
     Number(3));
   printExpression(expr);
+  printf(" = %d\n", evaluateExpression(expr));
   return 0;
 }
