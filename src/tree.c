@@ -77,32 +77,29 @@ void __printExpression(Expr expression, int height) {
   }
 }
 
-int __exprToStr(Expr expression, int height, char* buffer, int* length) {
+int __exprToStr(Expr expression, int height, char* buffer, int offset) {
   if (isTreeEmpty(expression)) {
-    return 0;
+    return offset;
   } else if (isOneElmt(expression)) {
-    int n = sprintf(buffer + *length, "%d", expression->info.number);
-    *length += n;
-    return n;
+    return offset + sprintf(buffer + offset, "%d", expression->info.number);
   } else {
     if (height > 0) {
-      *length += sprintf(buffer + *length, "(");
+      offset += sprintf(buffer + offset, "(");
     }
 
-    __exprToStr(expression->left, height + 1, buffer, length);
-    *length += sprintf(buffer + *length, "%c", operatorSymbol(expression->info.op));
-    __exprToStr(expression->right, height + 1, buffer, length);
+    offset = __exprToStr(expression->left, height + 1, buffer, offset);
+    offset += sprintf(buffer + offset, "%c", operatorSymbol(expression->info.op));
+    offset = __exprToStr(expression->right, height + 1, buffer, offset);
 
     if (height > 0) {
-      *length += sprintf(buffer + *length, ")");
+      offset += sprintf(buffer + offset, ")");
     }
-    return *length;
+    return offset;
   }
 }
 
 int exprToStr(Expr expression, char* buffer) {
-  int length = 0;
-  return __exprToStr(expression, 0, buffer, &length);
+  return __exprToStr(expression, 0, buffer, 0);
 }
 
 void printExpression(Expr expression) {
