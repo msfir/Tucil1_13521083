@@ -1,24 +1,6 @@
-#include <stdbool.h>
 #include <stdio.h>
-
-#define Number(n) &(Node) { .info=n }
-#define Expression(op, l, r) &(Node) { .info=op, .left=l, .right=r }
-
-typedef enum operator{ ADD, SUB, DIV, MUL } Operator;
-
-typedef union infotype {
-  int number;
-  Operator operator;
-} Infotype;
-
-typedef struct node *Tree;
-typedef Tree Expr;
-
-typedef struct node {
-  Infotype info;
-  Tree left;
-  Tree right;
-} Node;
+#include <stdlib.h>
+#include "tree.h"
 
 bool isOneElmt(Tree tree) {
   return tree->left == NULL && tree->right == NULL;
@@ -32,9 +14,36 @@ bool isUnaryRight(Tree tree) {
   return tree->left == NULL && tree->right != NULL;
 }
 
-bool isTreeEmpty(Tree tree) { return tree == NULL; }
+bool isTreeEmpty(Tree tree) {
+  return tree == NULL;
+}
 
-void printOperator(Operator op) {
+void deallocateTree(Tree tree) {
+  if (isTreeEmpty(tree)) {
+    return;
+  }
+  deallocateTree(tree->left);
+  deallocateTree(tree->right);
+  free(tree);
+}
+
+Tree Number(int n) {
+  Tree node = (Tree) malloc(sizeof(Node));
+  node->info = (Infotype) n;
+  node->left = NULL;
+  node->right = NULL;
+  return node;
+}
+
+Tree Expression(Operator op, Tree left, Tree right) {
+  Tree node = (Tree) malloc(sizeof(Node));
+  node->info = (Infotype) op;
+  node->left = left;
+  node->right = right;
+  return node;
+}
+
+char operatorSymbol(Operator op) {
   char sym = '?';
   if (op == ADD) {
     sym = '+';
@@ -45,7 +54,7 @@ void printOperator(Operator op) {
   } else if (op == DIV) {
     sym = '/';
   }
-  printf("%c", sym);
+  return sym;
 }
 
 void __printExpression(Expr expression, int height) {
@@ -59,13 +68,41 @@ void __printExpression(Expr expression, int height) {
     }
 
     __printExpression(expression->left, height + 1);
-    printOperator(expression->info.operator);
+    printf("%c", operatorSymbol(expression->info.op));
     __printExpression(expression->right, height + 1);
 
     if (height > 0) {
       printf(")");
     }
   }
+}
+
+int __exprToStr(Expr expression, int height, char* buffer, int* length) {
+  if (isTreeEmpty(expression)) {
+    return 0;
+  } else if (isOneElmt(expression)) {
+    int n = sprintf(buffer + *length, "%d", expression->info.number);
+    *length += n;
+    return n;
+  } else {
+    if (height > 0) {
+      *length += sprintf(buffer + *length, "(");
+    }
+
+    __exprToStr(expression->left, height + 1, buffer, length);
+    *length += sprintf(buffer + *length, "%c", operatorSymbol(expression->info.op));
+    __exprToStr(expression->right, height + 1, buffer, length);
+
+    if (height > 0) {
+      *length += sprintf(buffer + *length, ")");
+    }
+    return *length;
+  }
+}
+
+int exprToStr(Expr expression, char* buffer) {
+  int length = 0;
+  return __exprToStr(expression, 0, buffer, &length);
 }
 
 void printExpression(Expr expression) {
@@ -78,7 +115,7 @@ int evaluateExpression(Expr expression) {
   } else if (isOneElmt(expression)) {
     return expression->info.number;
   } else {
-    Operator op = expression->info.operator;
+    Operator op = expression->info.op;
     int left = evaluateExpression(expression->left);
     int right = evaluateExpression(expression->right);
     int value = 0;
@@ -93,23 +130,4 @@ int evaluateExpression(Expr expression) {
     }
     return value;
   }
-}
-
-int main() {
-  Expr expr = Expression(
-    DIV,
-    Expression(
-      MUL,
-      Number(12),
-      Expression(
-        ADD,
-        Number(3),
-        Expression(
-          SUB,
-          Number(13),
-          Number(7)))),
-    Number(3));
-  printExpression(expr);
-  printf(" = %d\n", evaluateExpression(expr));
-  return 0;
 }
