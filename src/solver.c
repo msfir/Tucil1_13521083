@@ -116,7 +116,7 @@ int make24(int a, int b, int c, int d, char solutions[][22]) {
           // hardcode 5 kemungkinan urutan evaluasi
           // case 1: ((a + b) + c) + d
           if (eval(op3, eval(op2, eval(op1, a, b), c), d) == 24) {
-            sprintf(solutions[n++], "(%d %c %d) %c %d) %c %d", a, opc1, b, opc2, c, opc3, d);
+            sprintf(solutions[n++], "((%d %c %d) %c %d) %c %d", a, opc1, b, opc2, c, opc3, d);
           }
           // case 2: (a + (b + c)) + d
           if (eval(op3, eval(op1, a, eval(op2, b, c)), d) == 24) {
@@ -139,14 +139,4 @@ int make24(int a, int b, int c, int d, char solutions[][22]) {
     }
   }
   return n;
-}
-
-int main() {
-  char solutions[320][22];
-  int n = make24(12, 12, 12, 12, solutions);
-  printf("Banyak solusi: %d\n", n);
-  for (int i = 0; i < n; i++) {
-    printf("%2d. %s\n", i + 1, solutions[i]);
-  }
-  return 0;
 }
