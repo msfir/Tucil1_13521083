@@ -91,16 +91,20 @@ void get_user_input(char cards[4][MAX_INPUT_BUFFER], int cards_int[4]) {
 
 int main_menu() {
   int choice;
+  bool valid = false;
   do {
     puts("");
     puts("Pilih opsi berikut ini");
     puts("[1] Masukkan kartu secara manual");
     puts("[2] Bangkitkan kartu secara acak");
-    puts("[3] Keluar");
     puts("");
     printf("Masukan: ");
     scanf("%d", &choice);
-  } while (choice < 1 || choice > 3);
+    valid = choice == 1 || choice == 2;
+    if (!valid) {
+      puts("Masukan tidak sesuai");
+    }
+  } while (!valid);
   clear_stdin();
   return choice;
 }
@@ -109,23 +113,32 @@ int main() {
   char cards[4][MAX_INPUT_BUFFER];
   int cards_int[4];
   char solutions[500][22];
-  while (true) {
-    puts("------------------------------");
-    puts("|     24 Card Game Solver    |");
-    puts("------------------------------");
-    int choice = main_menu();
-    puts("");
-    switch (choice) {
-      case 1:
-        get_user_input(cards, cards_int);
-        puts("");
-        break;
-      case 2:
-        generate_cards(cards, cards_int);
-        break;
-      default:
-        puts("Bye.");
-        exit(0);
+  clock_t elapsed_time;
+  puts("------------------------------");
+  puts("|     24 Card Game Solver    |");
+  puts("------------------------------");
+  int choice = main_menu();
+  puts("");
+  switch (choice) {
+    case 1:
+      get_user_input(cards, cards_int);
+      puts("");
+      break;
+    case 2:
+      generate_cards(cards, cards_int);
+      break;
+    default:
+      // unreachable
+      exit(1);
+  }
+  printf("Kartu: %s %s %s %s\n", cards[0], cards[1], cards[2], cards[3]);
+  elapsed_time = clock();
+  int n = make24(cards_int[0], cards_int[1], cards_int[2], cards_int[3], solutions);
+  elapsed_time = clock() - elapsed_time;
+  if (n > 0) {
+    printf("Ditemukan %d solusi:\n", n);
+    for (int i = 0; i < n; i++) {
+      printf("%d. %s\n", i + 1, solutions[i]);
     }
     printf("Kartu: %s %s %s %s\n", cards[0], cards[1], cards[2], cards[3]);
     int n = make24(cards_int[0], cards_int[1], cards_int[2], cards_int[3], solutions);
@@ -152,5 +165,8 @@ int main() {
     } else {
       puts("Tidak ditemukan solusi");
     }
+  } else {
+    puts("Tidak ada solusi");
   }
+  printf("Waktu eksekusi program: %.3lf ms\n", (double) elapsed_time / CLOCKS_PER_SEC * 1000);
 }
