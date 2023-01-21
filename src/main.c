@@ -119,17 +119,11 @@ int main() {
   puts("------------------------------");
   int choice = main_menu();
   puts("");
-  switch (choice) {
-    case 1:
-      get_user_input(cards, cards_int);
-      puts("");
-      break;
-    case 2:
-      generate_cards(cards, cards_int);
-      break;
-    default:
-      // unreachable
-      exit(1);
+  if (choice == 1) {
+    get_user_input(cards, cards_int);
+    puts("");
+  } else {
+    generate_cards(cards, cards_int);
   }
   printf("Kartu: %s %s %s %s\n", cards[0], cards[1], cards[2], cards[3]);
   elapsed_time = clock();
