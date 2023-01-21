@@ -109,48 +109,43 @@ int main() {
   char cards[4][MAX_INPUT_BUFFER];
   int cards_int[4];
   char solutions[500][22];
-  while (true) {
-    puts("------------------------------");
-    puts("|     24 Card Game Solver    |");
-    puts("------------------------------");
-    int choice = main_menu();
+  puts("------------------------------");
+  puts("|     24 Card Game Solver    |");
+  puts("------------------------------");
+  int choice = main_menu();
+  puts("");
+  if (choice == 1) {
+    get_user_input(cards, cards_int);
     puts("");
-    switch (choice) {
-      case 1:
-        get_user_input(cards, cards_int);
-        puts("");
-        break;
-      case 2:
-        generate_cards(cards, cards_int);
-        break;
-      default:
-        puts("Bye.");
-        exit(0);
-    }
-    printf("Kartu: %s %s %s %s\n", cards[0], cards[1], cards[2], cards[3]);
-    int n = make24(cards_int[0], cards_int[1], cards_int[2], cards_int[3], solutions);
-    if (n > 0) {
-      printf("Ditemukan %d solusi:\n", n);
-      for (int i = 0; i < n; i++) {
-        printf("%d. %s\n", i + 1, solutions[i]);
-      }
-      char ans[MAX_INPUT_BUFFER];
-      do {
-        printf("Apakah Anda ingin menyimpan solusi? (y/[n]) ");
-        fgets(ans, MAX_INPUT_BUFFER, stdin);
-      } while (ans[0] != 'y' && ans[0] != 'n' && ans[0] != '\n');
-      if (ans[0] == 'y') {
-        char file_name[MAX_FILE_NAME_LENGTH];
-        printf("Masukkan nama file: ");
-        fgets(file_name, MAX_FILE_NAME_LENGTH, stdin);
-        int len = str_length(file_name);
-        if (len > 0 && file_name[len - 1] == '\n') {
-          file_name[--len] = '\0';
-        }
-        save_solutions(file_name, cards, solutions, n);
-      }
-    } else {
-      puts("Tidak ditemukan solusi");
-    }
+  } else {
+    generate_cards(cards, cards_int);
   }
+  printf("Kartu: %s %s %s %s\n", cards[0], cards[1], cards[2], cards[3]);
+  clock_t elapsed_time = clock();
+  int n = make24(cards_int[0], cards_int[1], cards_int[2], cards_int[3], solutions);
+  elapsed_time = clock() - elapsed_time;
+  if (n > 0) {
+    printf("Ditemukan %d solusi:\n", n);
+    for (int i = 0; i < n; i++) {
+      printf("%d. %s\n", i + 1, solutions[i]);
+    }
+    char ans[MAX_INPUT_BUFFER];
+    do {
+      printf("Apakah Anda ingin menyimpan solusi? (y/[n]) ");
+      fgets(ans, MAX_INPUT_BUFFER, stdin);
+    } while (ans[0] != 'y' && ans[0] != 'n' && ans[0] != '\n');
+    if (ans[0] == 'y') {
+      char file_name[MAX_FILE_NAME_LENGTH];
+      printf("Masukkan nama file: ");
+      fgets(file_name, MAX_FILE_NAME_LENGTH, stdin);
+      int len = str_length(file_name);
+      if (len > 0 && file_name[len - 1] == '\n') {
+        file_name[--len] = '\0';
+      }
+      save_solutions(file_name, cards, solutions, n);
+    }
+  } else {
+    puts("Tidak ditemukan solusi");
+  }
+  printf("Waktu eksekusi program: %.3lf ms\n", (double) elapsed_time / CLOCKS_PER_SEC * 1000);
 }
