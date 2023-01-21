@@ -77,7 +77,7 @@ void get_user_input(char cards[4][MAX_INPUT_BUFFER], int cards_int[4]) {
     valid = true;
     printf("Masukkan kartu: ");
     scanf("%s %s %s %s", cards[0], cards[1], cards[2], cards[3]);
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4 && valid; i++) {
       if (!parse_input(cards[i], &cards_int[i])) {
         valid = false;
       }
