@@ -44,14 +44,28 @@ bool arrays_equal(const int* a, const int* b, const int size) {
   return true;
 }
 
+int str_length(const char* s) {
+  int i = 0;
+  while (s[i++] != '\0');
+  return i - 1;
+}
+
 void copy_array(const int* source, int* destination, int size) {
   for (int i = 0; i < size; i++) {
     destination[i] = source[i];
   }
 }
 
-int cmp(const void* a, const void* b) {
-  return *(int*) a - *(int*) b;
+void sort(int* arr, int size) {
+  for (int i = 0; i < size; i++) {
+    int min_idx = i;
+    for (int j = i + 1; j < size; j++) {
+      if (arr[j] < arr[min_idx]) {
+        min_idx = j;
+      }
+    }
+    swap(&arr[i], &arr[min_idx]);
+  }
 }
 
 bool is_element4(int e[4], int arr[24][4], int size) {
@@ -66,7 +80,7 @@ bool is_element4(int e[4], int arr[24][4], int size) {
 }
 
 int unique_permutations4(int arr[4], int buffer[][4]) {
-  qsort(arr, 4, sizeof(int), cmp);
+  sort(arr, 4);
   int len = 0;
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 4; j++) {

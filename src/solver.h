@@ -11,9 +11,11 @@ void swap(int* a, int* b);
 
 bool arrays_equal(const int* a, const int* b, const int size);
 
+int str_length(const char* s);
+
 void copy_array(const int* source, int* destination, int size);
 
-int cmp(const void* a, const void* b);
+void sort(int* arr, int size);
 
 bool is_element4(int e[4], int arr[24][4], int size);
 
