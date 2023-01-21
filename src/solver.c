@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-
-typedef enum operator{ ADD, SUB, DIV, MUL } Operator;
+#include "solver.h"
 
 char operatorSymbol(Operator op) {
   char sym = '?';
@@ -51,7 +50,7 @@ void copy_array(const int* source, int* destination, int size) {
   }
 }
 
-int cmp_int(const void* a, const void* b) {
+int cmp(const void* a, const void* b) {
   return *(int*) a - *(int*) b;
 }
 
@@ -67,7 +66,7 @@ bool is_element4(int e[4], int arr[24][4], int size) {
 }
 
 int unique_permutations4(int arr[4], int buffer[][4]) {
-  qsort(arr, 4, sizeof(int), cmp_int);
+  qsort(arr, 4, sizeof(int), cmp);
   int len = 0;
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 4; j++) {
@@ -144,7 +143,7 @@ int make24(int a, int b, int c, int d, char solutions[][22]) {
 
 int main() {
   char solutions[320][22];
-  int n = make24(1, 2, 3, 4, solutions);
+  int n = make24(12, 12, 12, 12, solutions);
   printf("Banyak solusi: %d\n", n);
   for (int i = 0; i < n; i++) {
     printf("%2d. %s\n", i + 1, solutions[i]);
