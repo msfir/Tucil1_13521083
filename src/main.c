@@ -5,7 +5,7 @@
 #include <errno.h>
 #include "solver.h"
 
-#define MAX_INPUT_BUFFER 4
+#define MAX_INPUT_BUFFER 20
 #define CARDS_LENGTH 13
 #define MAX_FILE_NAME_LENGTH 100
 
@@ -41,7 +41,7 @@ bool parse_input(const char* input, int* output) {
   return false;
 }
 
-void save_solutions(const char* file_name, const char cards[4][4], const char solutions[][22], const int num_of_solutions) {
+void save_solutions(const char* file_name, const char cards[4][MAX_INPUT_BUFFER], const char solutions[][22], const int num_of_solutions) {
   FILE* file;
   file = fopen(file_name, "w");
   if (errno) {
@@ -56,7 +56,7 @@ void save_solutions(const char* file_name, const char cards[4][4], const char so
   fclose(file);
 }
 
-void generate_cards(char cards[4][4], int cards_int[4]) {
+void generate_cards(char cards[4][MAX_INPUT_BUFFER], int cards_int[4]) {
   time_t t;
   srand(time(&t));
   for (int i = 0; i < 4; i++) {
@@ -66,8 +66,27 @@ void generate_cards(char cards[4][4], int cards_int[4]) {
   }
 }
 
-void get_user_input(char cards[4][4], int cards_int[4]) {
+void clear_stdin() {
+  int c;
+  while ((c = getchar()) != '\n' && c != EOF);
+}
 
+void get_user_input(char cards[4][MAX_INPUT_BUFFER], int cards_int[4]) {
+  bool valid;
+  do {
+    valid = true;
+    printf("Masukkan kartu: ");
+    scanf("%s %s %s %s", cards[0], cards[1], cards[2], cards[3]);
+    for (int i = 0; i < 4; i++) {
+      if (!parse_input(cards[i], &cards_int[i])) {
+        valid = false;
+      }
+    }
+    if (!valid) {
+      puts("Masukan tidak valid");
+    }
+    clear_stdin();
+  } while (!valid);
 }
 
 int main_menu() {
@@ -81,14 +100,12 @@ int main_menu() {
     printf("Masukan: ");
     scanf("%d", &choice);
   } while (choice < 1 || choice > 3);
-  // membersihkan input buffer
-  int c;
-  while ((c = getchar()) != '\n' && c != EOF) { }
+  clear_stdin();
   return choice;
 }
 
 int main() {
-  char cards[4][4];
+  char cards[4][MAX_INPUT_BUFFER];
   int cards_int[4];
   char solutions[500][22];
   puts("------------------------------");
@@ -99,6 +116,7 @@ int main() {
   switch (choice) {
     case 1:
       get_user_input(cards, cards_int);
+      puts("");
       break;
     case 2:
       generate_cards(cards, cards_int);
