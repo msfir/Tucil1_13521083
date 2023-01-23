@@ -96,11 +96,10 @@ int main_menu() {
     puts("Pilih opsi berikut ini");
     puts("[1] Masukkan kartu secara manual");
     puts("[2] Bangkitkan kartu secara acak");
-    puts("[3] Keluar");
     puts("");
     printf("Masukan: ");
     scanf("%d", &choice);
-  } while (choice < 1 || choice > 3);
+  } while (choice != 1 && choice != 2);
   clear_stdin();
   return choice;
 }
