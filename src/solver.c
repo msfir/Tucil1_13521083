@@ -27,12 +27,6 @@ float eval(Operator op, float left, float right) {
   }
 }
 
-void swap(int* a, int* b) {
-  int temp = *a;
-  *a = *b;
-  *b = temp;
-}
-
 bool arrays_equal(const int* a, const int* b, const int size) {
   int i = 0;
   while (i < size) {
@@ -56,18 +50,6 @@ void copy_array(const int* source, int* destination, int size) {
   }
 }
 
-void sort(int* arr, int size) {
-  for (int i = 0; i < size; i++) {
-    int min_idx = i;
-    for (int j = i + 1; j < size; j++) {
-      if (arr[j] < arr[min_idx]) {
-        min_idx = j;
-      }
-    }
-    swap(&arr[i], &arr[min_idx]);
-  }
-}
-
 bool is_element4(int e[4], int arr[24][4], int size) {
   int i = 0;
   while (i < size) {
@@ -80,7 +62,6 @@ bool is_element4(int e[4], int arr[24][4], int size) {
 }
 
 int unique_permutations4(int arr[4], int buffer[][4]) {
-  sort(arr, 4);
   int len = 0;
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 4; j++) {
