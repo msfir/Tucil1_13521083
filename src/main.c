@@ -49,9 +49,13 @@ void save_solutions(const char* file_name, const char cards[4][MAX_INPUT_BUFFER]
     exit(1);
   }
   fprintf(file, "Kartu: %s %s %s %s\n", cards[0], cards[1], cards[2], cards[3]);
-  fprintf(file, "Solusi:");
-  for (int i = 0; i < num_of_solutions; i++) {
-    fprintf(file, "\n%d. %s", i + 1, solutions[i]);
+  if (num_of_solutions > 0) {
+    fputs("Solusi:", file);
+    for (int i = 0; i < num_of_solutions; i++) {
+      fprintf(file, "\n%d. %s", i + 1, solutions[i]);
+    }
+  } else {
+    fputs("Tidak ada solusi", file);
   }
   fclose(file);
 }
@@ -91,6 +95,7 @@ void get_user_input(char cards[4][MAX_INPUT_BUFFER], int cards_int[4]) {
 
 int main_menu() {
   int choice;
+  bool valid;
   do {
     puts("");
     puts("Pilih opsi berikut ini");
@@ -99,7 +104,11 @@ int main_menu() {
     puts("");
     printf("Masukan: ");
     scanf("%d", &choice);
-  } while (choice != 1 && choice != 2);
+    valid = choice == 1 || choice == 2;
+    if (!valid) {
+      puts("Masukan tidak sesuai");
+    }
+  } while (!valid);
   clear_stdin();
   return choice;
 }
@@ -128,23 +137,23 @@ int main() {
     for (int i = 0; i < n; i++) {
       printf("%d. %s\n", i + 1, solutions[i]);
     }
-    char ans[MAX_INPUT_BUFFER];
-    do {
-      printf("Apakah Anda ingin menyimpan solusi? (y/[n]) ");
-      fgets(ans, MAX_INPUT_BUFFER, stdin);
-    } while (ans[0] != 'y' && ans[0] != 'n' && ans[0] != '\n');
-    if (ans[0] == 'y') {
-      char file_name[MAX_FILE_NAME_LENGTH];
-      printf("Masukkan nama file: ");
-      fgets(file_name, MAX_FILE_NAME_LENGTH, stdin);
-      int len = str_length(file_name);
-      if (len > 0 && file_name[len - 1] == '\n') {
-        file_name[--len] = '\0';
-      }
-      save_solutions(file_name, cards, solutions, n);
-    }
   } else {
-    puts("Tidak ditemukan solusi");
+    puts("Tidak ada solusi");
+  }
+  char ans[MAX_INPUT_BUFFER];
+  do {
+    printf("Apakah Anda ingin menyimpan solusi? (y/[n]) ");
+    fgets(ans, MAX_INPUT_BUFFER, stdin);
+  } while (ans[0] != 'y' && ans[0] != 'n' && ans[0] != '\n');
+  if (ans[0] == 'y') {
+    char file_name[MAX_FILE_NAME_LENGTH];
+    printf("Masukkan nama file: ");
+    fgets(file_name, MAX_FILE_NAME_LENGTH, stdin);
+    int len = str_length(file_name);
+    if (len > 0 && file_name[len - 1] == '\n') {
+      file_name[--len] = '\0';
+    }
+    save_solutions(file_name, cards, solutions, n);
   }
   printf("Waktu eksekusi program: %.3lf ms\n", (double) elapsed_time / CLOCKS_PER_SEC * 1000);
 }
