@@ -94,9 +94,6 @@ int make24(int a, int b, int c, int d, char solutions[][22]) {
   int arr[4] = {a, b, c, d};
   int p = unique_permutations4(arr, buffer);
 
-  // menghindari solusi yang komutatif
-  char banned[64][22];
-  int banned_len = 0;
   for (int i = 0; i < p; i++) {
     a = buffer[i][0];
     b = buffer[i][1];
