@@ -1,2 +1,2 @@
 compile:
-	gcc src/*.c -o bin/main
+	gcc src/*.c -o bin/24solver
