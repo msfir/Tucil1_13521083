@@ -10,7 +10,7 @@ Program ini dibuat untuk menyelesaikan permainan kartu 24. Program akan meminta 
 - [GNU make](https://www.gnu.org/software/make)
 ### Langkah Instalasi
 ```shell
-$ clone https://github.com/msfir/card24-solver.git
+$ git clone https://github.com/msfir/card24-solver.git
 $ cd card24-solver
 $ make
 ```
